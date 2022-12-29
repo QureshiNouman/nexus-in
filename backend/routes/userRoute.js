@@ -23,7 +23,7 @@ router.get("/", (req, res) => {
 //     //console.log(err);
 //   }
 // });
-
+//register route
 router.route("/register").post(async (req, res) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
@@ -43,5 +43,22 @@ router.route("/register").post(async (req, res) => {
     //console.log(err);
   }
 });
-
+//login route
+router.route("/login").post(async (req, res) => {
+  console.log(req.body);
+  const { email } = req.body;
+  if (!email) {
+    return res.status(422).json({ error: "Please Enter Email" });
+  }
+  try {
+    const userLogin = await User.findOne({ email: email });
+    console.log(userLogin);
+    if (userLogin) {
+      res.send(userLogin);
+      res.status(201).json({ message: "Correct Email!!!" });
+    } else res.status(400).json({ message: "Invalid Email!!!" });
+  } catch (err) {
+    console.log(err);
+  }
+});
 module.exports = router;

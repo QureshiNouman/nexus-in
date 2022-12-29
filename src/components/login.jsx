@@ -19,10 +19,8 @@ const Login = () => {
             </div>
 
             <div class="signin-form">
-              <h2 class="form-title">Sign up</h2>
-              <form method="POST" class="register-form" id="login-form">
-                <NameField />
-              </form>
+              <h2 class="form-title">Login</h2>
+              <NameField />
               <div class="social-login">
                 <span class="social-label">Or login with</span>
                 <ul class="socials">
