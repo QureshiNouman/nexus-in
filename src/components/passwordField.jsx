@@ -11,9 +11,20 @@ const PasswordField = (props) => {
     setPassword(value);
     console.log(password);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (password == props.user.password) {
+    const res = await fetch("http://localhost:3001/comparePassword", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: props.user.email,
+        password: password,
+      }),
+    });
+    const data = await res.json();
+    if (data) {
       setPasswordError("");
       console.log("Home Page");
       history.push({

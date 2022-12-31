@@ -5,6 +5,7 @@ import "./App.css";
 import SignUp from "./components/signup";
 import HomePage from "./components/homePage";
 import Home from "./components/home";
+import AdminPanel from "./components/adminPanel";
 
 class App extends Component {
   render() {
@@ -14,6 +15,7 @@ class App extends Component {
           <Route path="/signup" component={SignUp} />
           <Route path="/login" component={Login} />
           <Route path="/homePage" component={HomePage} />
+          <Route path="/adminPanel" component={AdminPanel} />
           <Route path="/" component={SignUp} />
         </Switch>
       </div>

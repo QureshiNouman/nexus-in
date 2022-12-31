@@ -8,11 +8,7 @@ const NameField = () => {
   const [user, setUser] = useState({});
   const [adminState, setAdminState] = useState(-1);
   const [emailError, setEmailError] = useState("");
-  const [adminKey, setAdminKey] = useState({
-    to: "",
-    subject: "",
-    description: "",
-  });
+  const [randomkey, setRandomKey] = useState("");
   const handleChange = (e) => {
     const { value } = e.target;
     setEmail(value);
@@ -46,7 +42,9 @@ const NameField = () => {
     if (data.isAdmin == false) {
       setAdminState(0);
     } else if (data.isAdmin == true) {
+      setAdminState(1);
       const key = generateKey();
+      setRandomKey(key);
       const resp = await fetch("http://localhost:3001/sendKey", {
         method: "POST",
         headers: {
@@ -60,9 +58,9 @@ const NameField = () => {
       });
       const Keydata = await resp.json();
       console.log(Keydata);
-      setAdminState(1);
     }
   };
+  console.log(randomkey);
   if (adminState == -1) {
     return (
       <div>
@@ -105,7 +103,7 @@ const NameField = () => {
         </div>
       </div>
     );
-  } else if (adminState == 1) return <KeyField />;
+  } else if (adminState == 1) return <KeyField user={user} keys={randomkey} />;
   else if (adminState == 0) return <PasswordField user={user} />;
 };
 // class NameField extends Component {

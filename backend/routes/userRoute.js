@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcryptjs");
 const User = require("../models/userData");
 const nodemailer = require("nodemailer");
 router.get("/", (req, res) => {
@@ -52,7 +53,7 @@ router.route("/login").post(async (req, res) => {
     return res.status(422).json({ error: "Please Enter Email" });
   }
   try {
-    const userLogin = await User.findOne({ email: email });
+    const userLogin = await User.findOne({ email });
     console.log(userLogin);
     if (userLogin) {
       res.send(userLogin);
@@ -93,5 +94,15 @@ router.route("/sendKey").post(async (req, res) => {
       console.log("Email sent successfully");
     }
   });
+});
+
+//compare Password route
+router.route("/comparePassword").post(async (req, res) => {
+  console.log(req);
+  const { email, password } = req.body;
+  const userLogin = await User.findOne({ email });
+  const pswrd = await bcrypt.compare(password, userLogin.password);
+  console.log(pswrd);
+  res.send(pswrd);
 });
 module.exports = router;
