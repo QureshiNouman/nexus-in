@@ -4,7 +4,6 @@ import Login from "./components/login";
 import "./App.css";
 import SignUp from "./components/signup";
 import HomePage from "./components/homePage";
-import Home from "./components/home";
 import AdminPanel from "./components/adminPanel";
 
 class App extends Component {
