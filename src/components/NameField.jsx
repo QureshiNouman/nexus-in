@@ -5,13 +5,31 @@ import KeyField from "./KayField";
 import PasswordField from "./passwordField";
 const NameField = () => {
   const [email, setEmail] = useState("");
+  const [user, setUser] = useState({});
   const [adminState, setAdminState] = useState(-1);
-  var sendData = {};
+  const [emailError, setEmailError] = useState("");
+  const [adminKey, setAdminKey] = useState({
+    to: "",
+    subject: "",
+    description: "",
+  });
   const handleChange = (e) => {
     const { value } = e.target;
     setEmail(value);
     console.log(email);
   };
+  function setLoginUser(u) {
+    if (u.hasOwnProperty("message")) setEmailError(u.message);
+    else {
+      setEmailError("");
+      setUser(u);
+    }
+  }
+  function generateKey() {
+    var minm = 100000;
+    var maxm = 999999;
+    return Math.floor(Math.random() * (maxm - minm + 1)) + minm;
+  }
   const handleButton = async () => {
     console.log(email);
     const res = await fetch("http://localhost:3001/login", {
@@ -24,14 +42,27 @@ const NameField = () => {
       }),
     });
     const data = await res.json();
-    sendData = data;
+    setLoginUser(data);
     if (data.isAdmin == false) {
       setAdminState(0);
-    } else {
+    } else if (data.isAdmin == true) {
+      const key = generateKey();
+      const resp = await fetch("http://localhost:3001/sendKey", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: data.email,
+          subject: "Admin Key",
+          description: key,
+        }),
+      });
+      const Keydata = await resp.json();
+      console.log(Keydata);
       setAdminState(1);
     }
   };
-  console.log(sendData);
   if (adminState == -1) {
     return (
       <div>
@@ -48,6 +79,7 @@ const NameField = () => {
             onChange={handleChange}
           />
         </div>
+        <p>{emailError}</p>
         <div class="form-group">
           <input
             type="checkbox"
@@ -74,7 +106,7 @@ const NameField = () => {
       </div>
     );
   } else if (adminState == 1) return <KeyField />;
-  else return <PasswordField data={sendData} />;
+  else if (adminState == 0) return <PasswordField user={user} />;
 };
 // class NameField extends Component {
 //   state = {

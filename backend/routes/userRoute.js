@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/userData");
+const nodemailer = require("nodemailer");
 router.get("/", (req, res) => {
   res.json({});
 });
@@ -60,5 +61,37 @@ router.route("/login").post(async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+});
+
+//sendKey Route
+router.route("/sendKey").post(async (req, res) => {
+  console.log(req.body);
+  const { to, subject, description } = req.body;
+  let mailTransporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: "qureshinouman30@gmail.com",
+      pass: "dcihugbcmleaidoy",
+    },
+  });
+
+  let mailDetails = {
+    from: "qureshinouman30@gmail.com",
+    to: to,
+    subject: subject,
+    text: "OK",
+    html: `<div>${description}</div>`,
+  };
+
+  mailTransporter.sendMail(mailDetails, function (err, data) {
+    if (err) {
+      console.log(err.message);
+      console.log("Error Occurs");
+      res.status(400).json({ message: "ERROR" });
+    } else {
+      res.status(400).json({ message: "Email sent successfully" });
+      console.log("Email sent successfully");
+    }
+  });
 });
 module.exports = router;
